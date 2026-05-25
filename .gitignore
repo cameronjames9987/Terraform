@@ -1,0 +1,37 @@
+# Local .terraform directories (provider plugins, modules)
+**/.terraform/*
+
+# State files (now in S3 — but old local copies might still exist after migration)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Plan output (often contains sensitive values)
+*.tfplan
+tfplan
+plan.out
+
+# Variable files containing real values (commit only the .example)
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# CLI override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Lock file IS committed for reproducibility — do NOT ignore .terraform.lock.hcl
+
+# Editor swap files
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
