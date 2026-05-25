@@ -6,10 +6,10 @@ Provisions a single EC2 instance, installs Python and dependencies, and clones t
 
 | Resource | Notes |
 |---|---|
-| EC2 instance | Amazon Linux 2023, `t3.micro`, IMDSv2-only, encrypted EBS |
-| Security Group | SSH inbound from your IP only |
+| EC2 instance | Amazon Linux 2023,, IMDSv2-only, encrypted EBS |
+| Security Group | SSH inbound from a /32 IP only |
 | Key Pair | Uploaded from your local SSH public key |
-| (uses default VPC) | No new networking |
+| (uses default VPC) |  |
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ Provisions a single EC2 instance, installs Python and dependencies, and clones t
 ```sh
 # 1. Create your tfvars (one-time)
 cp terraform.tfvars.example terraform.tfvars
-# Edit terraform.tfvars — set allowed_ssh_cidr to YOUR_IP/32
+# Edit terraform.tfvars — set allowed_ssh_cidr to YOUR_IP/32, or let it prompt for an IP
 curl -s https://checkip.amazonaws.com   # to find your IP
 
 # 2. Deploy
@@ -58,31 +58,7 @@ terraform destroy
 | `terraform.tfvars.example` | Template for variable values; copy to `terraform.tfvars` and edit |
 | `.gitignore` | Excludes state, tfvars, plans, editor swap files |
 
-## How secrets are handled
 
-| Item | Storage |
-|---|---|
-| AWS API credentials | `~/.aws/credentials` — never in TF |
-| SSH private key | Your laptop only |
-| SSH public key | Uploaded to AWS as a Key Pair (public keys are safe) |
-| `terraform.tfvars` | Local, gitignored |
-| `terraform.tfstate` | Local, gitignored |
-
-State is stored locally in `terraform.tfstate`. For team / production setups, switch to a remote backend (S3 + DynamoDB).
-
-## Caveats
-
-- **Pygame won't display** on a headless EC2. The slot machine (CLI) works fine over SSH; the pygame project does not without X11 forwarding.
-- **Free tier:** `t3.micro` is free-tier eligible 750 hrs/month for 12 months. Always `terraform destroy` when finished.
-
-## Useful commands
-
-```sh
-terraform fmt              # format .tf files
-terraform validate         # syntax check
-terraform output           # re-print outputs
-terraform output -raw public_ip
-terraform state list       # what's tracked
 ```
 
 ## Troubleshooting

@@ -17,19 +17,31 @@ provider "aws" {
   region = var.aws_region
 }
 
-# Look up the latest Amazon Linux 2023 AMI — no hardcoded AMI IDs
+# Look up the latest Amazon Linux 2023 AMI — no hardcoded AMI IDs.
+# This filter matches the STANDARD general-purpose AL2023 image only,
+# excluding variants like ECS-optimized (30GB) or EKS-optimized.
 data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
 
   filter {
     name   = "name"
-    values = ["al2023-ami-*-x86_64"]
+    values = ["al2023-ami-2023*-kernel-*-x86_64"]
   }
 
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
   }
 }
 
